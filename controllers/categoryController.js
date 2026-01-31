@@ -3,7 +3,11 @@ const ObjectId = require("mongodb").ObjectId;
 
 const getAll = async (req, res) => {
   //#swagger.tags=['Categories']
-  const result = await mongodb.getDatabase().db().collection("Categories").find();
+  const result = await mongodb
+    .getDatabase()
+    .db()
+    .collection("Categories")
+    .find();
   result.toArray().then((Categories) => {
     res.setHeader("Content-Type", "application/json");
     // 200 status means successful btw.
@@ -28,7 +32,7 @@ const createCategory = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while creating the Category. ¯\\_(ツ)_/¯"
+          "An error occured while creating the Category. ¯\\_(ツ)_/¯",
       );
 };
 
@@ -50,7 +54,7 @@ const updateCategory = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while updating the Category. ¯\\_(ツ)_/¯"
+          "An error occured while updating the Category. ¯\\_(ツ)_/¯",
       );
 };
 
@@ -68,7 +72,7 @@ const removeCategory = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while removing the Category. ¯\\_(ツ)_/¯"
+          "An error occured while removing the Category. ¯\\_(ツ)_/¯",
       );
 };
 

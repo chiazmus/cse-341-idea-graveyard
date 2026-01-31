@@ -31,7 +31,7 @@ const createIdea = async (req, res) => {
   const Idea = {
     name: req.body.name,
     description: req.body.description,
-    categoryId: req.body.categoryId,
+    categoryId: req.body.categoryId, //This makes sure its actually a mongodb id rather than just a string.
   };
   const response = await mongodb
     .getDatabase()
@@ -44,7 +44,7 @@ const createIdea = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while creating the Idea. ¯\\_(ツ)_/¯"
+          "An error occured while creating the Idea. ¯\\_(ツ)_/¯",
       );
 };
 
@@ -54,7 +54,7 @@ const updateIdea = async (req, res) => {
   const Idea = {
     name: req.body.name,
     description: req.body.description,
-    categoryId: req.body.categoryId,
+    categoryId: req.body.categoryId, //This makes sure its actually a mongodb id rather than just a string.
   };
   const response = await mongodb
     .getDatabase()
@@ -67,7 +67,7 @@ const updateIdea = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while updating the Idea. ¯\\_(ツ)_/¯"
+          "An error occured while updating the Idea. ¯\\_(ツ)_/¯",
       );
 };
 
@@ -85,7 +85,7 @@ const removeIdea = async (req, res) => {
       .status(500)
       .json(
         response.error ||
-          "An error occured while removing the Idea. ¯\\_(ツ)_/¯"
+          "An error occured while removing the Idea. ¯\\_(ツ)_/¯",
       );
 };
 
