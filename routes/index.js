@@ -7,6 +7,7 @@ routes.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-routes.use("/contacts", require("./apiRoutes"));
+routes.use("/ideas", require("./ideaRoutes"));
+routes.use("/categories", require("./categoryRoutes"));
 
 module.exports = routes;
