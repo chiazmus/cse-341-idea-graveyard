@@ -1,15 +1,16 @@
 const router = require("express").Router();
 const { IdeaValidationRules, validate } = require('../utility/validator')
 const apiController = require("../controllers/ideaController");
+const {isAuthenticated} = require('../utility/authenticate.js');
 
 router.get("/", apiController.getAll);
 
 router.get("/:id", apiController.getSingle);
 
-router.post("/", IdeaValidationRules(), validate, apiController.createIdea);
+router.post("/", isAuthenticated, IdeaValidationRules(), validate, apiController.createIdea);
 
-router.put("/:id", IdeaValidationRules(), validate, apiController.updateIdea);
+router.put("/:id", isAuthenticated, IdeaValidationRules(), validate, apiController.updateIdea);
 
-router.delete("/:id", apiController.removeIdea);
+router.delete("/:id", isAuthenticated, apiController.removeIdea);
 
 module.exports = router;

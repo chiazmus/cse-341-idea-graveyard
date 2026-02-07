@@ -1,13 +1,14 @@
 const router = require("express").Router();
 const { CategoryValidationRules, validate } = require('../utility/validator')
 const apiController = require("../controllers/categoryController");
+const {isAuthenticated} = require('../utility/authenticate');
 
 router.get("/", apiController.getAll);
 
-router.post("/", CategoryValidationRules(), validate, apiController.createCategory);
+router.post("/", isAuthenticated, CategoryValidationRules(), validate, apiController.createCategory);
 
-router.put("/:id", CategoryValidationRules(), validate, apiController.updateCategory);
+router.put("/:id", isAuthenticated, CategoryValidationRules(), validate, apiController.updateCategory);
 
-router.delete("/:id", apiController.removeCategory);
+router.delete("/:id", isAuthenticated, apiController.removeCategory);
 
 module.exports = router;

@@ -5,11 +5,11 @@
     "description": "Contacts API",
     "version": "1.0.0"
   },
-  "host": "cse-341-idea-graveyard.onrender.com",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
-    "https",
-    "http"
+    "http",
+    "https"
   ],
   "paths": {
     "/": {

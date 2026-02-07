@@ -3,24 +3,77 @@ const app = express();
 const cors = require("cors");
 const mongodb = require("./data/database");
 const bodyParser = require("body-parser");
+const passport = require("passport");
+const session = require("express-session");
+const githubStrategy = require("passport-github2").Strategy;
+
 const port = 3000;
 
 app
   .use(cors())
   .use(bodyParser.json())
+  .use(
+    session({
+      secret: "secret",
+      resave: false,
+      saveUninitialized: true,
+    }),
+  )
+  .use(passport.initialize())
+  .use(passport.session())
   .use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Z-Key"
+      "Origin, X-Requested-With, Content-Type, Accept, Z-Key",
     );
     res.setHeader(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
+      "GET, POST, PUT, DELETE, OPTIONS",
     );
     next();
   })
-  .use("/", require("./routes"));
+  .use(cors({ methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"] }))
+  .use(cors({ origin: "*" }))
+
+passport.use(new githubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: process.env.CALLBACK_URL
+},
+function(accessToken, refreshToken, profile, done) {
+  //User.findOrCreate({ githubId: profile.id }, function (err, user) {
+  return done(null, profile);
+  //});
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+app.get('/', (req, res) => { res.send(req.session.user !== undefined ? `Logged in as ${req.session.user.displayName}` : "Logged Out")});
+
+app.get('/github/callback', passport.authenticate('github', {
+  failureRedirect: '/api-docs', session: false}),
+  (req, res) => {
+    req.session.user = req.user;
+    res.redirect('/');
+});
+
+app.use("/", require("./routes/index.js"));
+
+app.get("/login", passport.authenticate('github'), (req, res) => {});
+
+app.get('/logout', function(req, res, next) {
+  req.logout(function (err){
+    if (err) return next(err);
+    res.redirect('/');
+  });
+});
 
 mongodb.initDb((err) => {
   if (err) {
@@ -28,7 +81,8 @@ mongodb.initDb((err) => {
   } else {
     app.listen(process.env.PORT || port, () => {
       console.log(
-        "Database listening, Node running on port " + (process.env.PORT || port)
+        "Database listening, Node running on port " +
+          (process.env.PORT || port),
       );
     });
   }
